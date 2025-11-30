@@ -227,7 +227,12 @@ class UniversityLogic:
 # --- INTERFAZ GRAFICA (GUI) ---
 
 class App(tk.Tk):
+    """
+    Gestiona la interfaz gráfica principal de la aplicación.
+    Proporciona navegación, visualización de tablas y gráficos interactivos.
+    """
     def __init__(self):
+        """Inicializa la ventana principal, configura estilos y carga la lógica."""
         super().__init__()
         self.title("Keiser University - Grade Processor")
         self.geometry("1100x700")
@@ -246,6 +251,7 @@ class App(tk.Tk):
         self.show_dashboard()
 
     def setup_styles(self):
+        """Configura los estilos visuales para los widgets y el Treeview."""
         # Aqui configuramos los colores de la tabla (Treeview)
         style = ttk.Style()
         style.theme_use("clam") # 'clam' permite cambiar colores facil
@@ -267,6 +273,7 @@ class App(tk.Tk):
         style.map("Treeview", background=[('selected', BLUE_COLOR)])
 
     def setup_sidebar(self):
+        """Crea y organiza los widgets de la barra lateral de navegación."""
         self.sidebar = tk.Frame(self, bg=SIDEBAR_COLOR, width=200)
         self.sidebar.pack(side="left", fill="y")
         self.sidebar.pack_propagate(False)
@@ -301,17 +308,20 @@ class App(tk.Tk):
         self.btn_logs.pack(fill="x", pady=5)
 
     def setup_main_area(self):
+        """Configura el marco principal donde se mostrará el contenido dinámico."""
         # Frame principal (Fondo oscuro)
         self.main_frame = tk.Frame(self, bg=BG_COLOR)
         self.main_frame.pack(side="right", fill="both", expand=True, padx=20, pady=20)
 
     def clear_main_area(self):
+        """Elimina todos los widgets presentes en el área principal."""
         for widget in self.main_frame.winfo_children():
             widget.destroy()
 
     # --- PANTALLAS ---
 
     def show_dashboard(self):
+        """Muestra la vista del panel de control con la opción de cargar archivo."""
         self.clear_main_area()
         
         # Aseguramos que los labels tengan bg=BG_COLOR
@@ -331,6 +341,7 @@ class App(tk.Tk):
         self.status_label.pack(pady=20)
 
     def show_gpa(self):
+        """Muestra la vista del reporte de GPA en una tabla."""
         self.clear_main_area()
         lbl = tk.Label(self.main_frame, text="GPA Report", font=("Arial", 18, "bold"), 
                        bg=BG_COLOR, fg="white")
@@ -352,6 +363,7 @@ class App(tk.Tk):
                 tree.insert("", "end", values=vals)
 
     def show_stats(self):
+        """Muestra la vista de estadísticas de cursos en una tabla."""
         self.clear_main_area()
         lbl = tk.Label(self.main_frame, text="Course Statistics", font=("Arial", 18, "bold"), 
                        bg=BG_COLOR, fg="white")
@@ -372,6 +384,7 @@ class App(tk.Tk):
                 tree.insert("", "end", values=vals)
 
     def show_charts(self):
+        """Muestra la vista de gráficos y botones de selección."""
         self.clear_main_area()
         lbl = tk.Label(self.main_frame, text="Charts", font=("Arial", 18, "bold"), 
                        bg=BG_COLOR, fg="white")
@@ -391,6 +404,7 @@ class App(tk.Tk):
         self.chart_frame.pack(fill="both", expand=True, pady=20)
 
     def show_logs(self):
+        """Muestra la vista de registros de ejecución del sistema."""
         self.clear_main_area()
         lbl = tk.Label(self.main_frame, text="Execution Logs", font=("Arial", 18, "bold"), 
                        bg=BG_COLOR, fg="white")
@@ -406,6 +420,7 @@ class App(tk.Tk):
     # --- FUNCIONES DE BOTONES ---
 
     def upload_file(self):
+        """Abre un diálogo para seleccionar archivo e inicia el proceso en segundo plano."""
         filename = filedialog.askopenfilename(filetypes=[("Data Files", "*.csv *.json")])
         if filename:
             self.status_label.config(text="Processing... please wait")
@@ -416,6 +431,7 @@ class App(tk.Tk):
             t.start()
 
     def run_process(self, filename):
+        """Ejecuta la lógica de carga y actualiza la interfaz según el resultado."""
         result = self.logic.load_file(filename)
         
         if result:
@@ -426,6 +442,7 @@ class App(tk.Tk):
             messagebox.showerror("Error", "Something went wrong.\nCheck Logs.")
 
     def plot(self, chart_id):
+        """Genera y renderiza el gráfico seleccionado en el área de gráficos."""
         for widget in self.chart_frame.winfo_children():
             widget.destroy()
 
